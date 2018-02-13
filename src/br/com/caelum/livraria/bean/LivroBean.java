@@ -1,6 +1,5 @@
 package br.com.caelum.livraria.bean;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -72,8 +71,9 @@ public class LivroBean {
 		return new RedirectView("livro");
 	}
 	
-	public void excluir(Livro livro) {
+	public RedirectView excluir(Livro livro) {
 		new DAO<Livro>(Livro.class).remove(livro);
+		return new RedirectView("livro");
 	}
 	
 	public void excluirAutorDoLivro(Autor autor) {

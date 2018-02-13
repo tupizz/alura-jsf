@@ -5,21 +5,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Autor {
+public class Usuario {
 
 	@Id
 	@GeneratedValue
 	private Integer id;
-	private String nome;
-	
+	private String senha;
 	private String email;
 
-	public String getNome() {
-		return nome;
+	public String getSenha() {
+		return senha;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Integer getId() {
@@ -37,4 +36,5 @@ public class Autor {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 }

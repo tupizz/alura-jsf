@@ -1,32 +1,85 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 	<ui:composition template="_template.xhtml">
-		<ui:define name="titulo">Novo Autor</ui:define>
+		
+		<f:metadata>
+			<!-- 		
+				CARREGA AUTOR PELA ID ATRAVÉS DO MÉTODO GET, EX:
+				http://localhost:8085/livraria/autor.xhtml?autorId=2 
+			-->
+			<f:viewParam name="autorId" value="#{autorBean.autorId}"/>
+			<f:viewAction action="#{autorBean.carregarAutorPelaId}" if="#{autorBean.autorId != null}" />		
+		</f:metadata>
+	
+		<ui:define name="titulo">
+			<p:outputLabel value="#{msgs.fieldTitulo}"/> 
+		</ui:define>
 		
 		<ui:define name="conteudo">
 		
-				<h:form>
-					<fieldset>
-						<legend>Dados do Autor</legend>
-						<h:panelGrid columns="2">
-							<h:outputLabel value="Nome:" for="nome" />
-							<h:inputText id="nome" value="#{autorBean.autor.nome}" />
-							<h:commandButton value="Gravar" action="#{autorBean.gravar}" />
-						</h:panelGrid>
-					</fieldset>
-				</h:form>
+				<h:form id="formAutor">
 				
-		</ui:define>
+					<p:fieldset legend="#{msgs.fieldTituloForm}">
+						<h:panelGrid columns="3">
+							
+							
+							<p:outputLabel value="#{msgs.fieldNome}" for="nome" />
+							<p:inputText id="nome" value="#{autorBean.autor.nome}" />
+							<p:message for="nome" id="messageNome"/>
+							
+							
+							<p:outputLabel value="#{msgs.fieldEmail}" for="nome" />
+							<p:inputText id="email" value="#{autorBean.autor.email}" validatorMessage="Email inválido" >
+								<f:passThroughAttribute name="placeholder" value="Digite o email do Autor" />
+								<f:validateRegex pattern=".+@.+" />
+								<f:ajax event="keydown" render="messageEmail"/>
+							</p:inputText>
+							<p:message for="email" id="messageEmail"/>
+							
+							<p:commandButton value="Gravar" action="#{autorBean.gravar}" process="@form" update="@form :formTabelaAutores"/>
+						
+						
+						</h:panelGrid>
+					</p:fieldset>
+					
+				</h:form> <!-- fim form -->
+				
+				<br>	</br>			
+					
+				<h:form id="formTabelaAutores">
+				
+				
+					<p:dataList value="#{autorBean.autores}" var="autor" id="tabelaAutores22" type="definition"> 
+				        
+				        <f:facet name="header"> Autores </f:facet>
+
+				        <!-- EXCLUIR -->
+				        &nbsp;&nbsp;<p:commandButton icon="fa fa-fw fa-remove" action="#{autorBean.excluir(autor)}" update="@form" />
+				        				
+				        <!-- EDITAR -->
+				        &nbsp;&nbsp;<p:commandButton icon="fa fa-fw fa-edit" action="#{autorBean.carregarFormulario(autor)}" update=":formAutor"/>
+					    
+				        #{autor.nome} - #{autor.email}				        
+				       
+				    </p:dataList>
+					
+				
+				</h:form> <!-- fim h:form -->
+
+
+		</ui:define> <!-- fim body -->
 		
 		<ui:define name="txt-rodape">
 		  Cadastro de Autores
 		</ui:define>
 	
 	
-	</ui:composition>
+	</ui:composition> <!-- fim template -->
 
 </html>
